@@ -112,15 +112,15 @@
 	{
 		%var string class_name = field["class_name"] |> default string "";
 		%var string class_name_form = field["class_name_form"] |> default string "";
-		%var Dict class_settings = field["class_settings"] |> default string "";
+		%var Dict class_settings = field["class_settings"] |> default Dict {};
 		%var var model_path = static::getBindPath(field);
 		
 		<div class='form_row' @key={ field_name }>
 			<div class='form_label'>{ field["label"] }:</div>
 			<div class='form_value'>
 			
-				%if (rtl::exists(class_name_form)){ %var class_name = class_name_form; }
-				%if (rtl::exists(class_name))
+				%if (not rtl::isEmpty(class_name_form)){ %var class_name = class_name_form; }
+				%if (not rtl::isEmpty(class_name))
 				{
 					<{class_name} @bind={ model_path } @event:ChangeEvent="onItemChange"
 						used-by="form" name={ field_name } form-item={ model["item"] }
