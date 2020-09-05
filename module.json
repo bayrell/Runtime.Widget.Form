@@ -1,0 +1,10 @@
+{
+	"name": "Runtime.Web.Form",
+	"assets":
+	[
+		"Form",
+		"FormEvent",
+		"FormModel",
+		"ModuleDescription"
+	]
+}
