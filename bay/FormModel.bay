@@ -24,7 +24,7 @@ use Runtime.Core.RemoteCallAnswer;
 
 struct FormModel extends BaseStruct
 {
-	Collection field_errors = null;
+	Collection fields_errors = null;
 	Dict item = null;
 	string message = "";
 	string success_message = "";
@@ -67,14 +67,14 @@ struct FormModel extends BaseStruct
 	 */
 	pure FormModel setAnswer(FormModel model, RemoteCallAnswer answer)
 	{
-		model <= field_errors <= null;
+		model <= fields_errors <= null;
 		if (answer.isSuccess()) return static::setSuccess(model, answer.success_message);
 		model = static::setError(model, answer.error_message);
 		
 		/* Set field errors */
 		if (answer.code == rtl::ERROR_VALIDATION)
 		{
-			model <= field_errors <= answer.response["field_errors"];
+			model <= fields_errors <= answer.response["fields_errors"];
 		}
 		
 		return model
@@ -112,7 +112,7 @@ struct FormModel extends BaseStruct
 	pure FormModel clear(FormModel model) => new FormModel
 	{
 		"item": new Dict(),
-		"field_errors": null,
+		"fields_errors": null,
 		"message": "",
 		"success_message": "",
 		"error_message": "",
