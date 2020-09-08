@@ -27,6 +27,7 @@ struct FormEvent extends BaseStruct
 	static const string ACTION_UPDATE = "update";
 	static const string ACTION_CANCEL = "cancel";
 	static const string ACTION_CHANGE = "change";
+	static const string ACTION_SEARCH = "search";
 	string event = "";
 	Dict item = null;
 	string field_name = "";

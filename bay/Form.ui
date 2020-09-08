@@ -52,6 +52,7 @@
 }
 %form_buttons{
 	text-align: center;
+	margin-top: 10px;
 }
 %form_buttons %(Button)button{
 	margin-left: 10px;
@@ -97,12 +98,14 @@
 
 
 <template name="renderContent">
-	%var Collection<string> fields = params["fields"];
-	%for (int i=0; i<fields.count(); i++)
-	{
-		%var string field_name = fields[i];
-		%render static::renderRow(layout, model, params, field_name);
-	}
+	<div class="form_rows" @key="rows">
+		%var Collection<string> fields = params["fields"];
+		%for (int i=0; i<fields.count(); i++)
+		{
+			%var string field_name = fields[i];
+			%render static::renderRow(layout, model, params, field_name);
+		}
+	</div>
 </template>
 
 
@@ -110,16 +113,21 @@
 	%var Dict field = params["struct"][field_name];
 	%if (field != null)
 	{
+		<!-- Patch field settings -->
+		%var field = static::patchField(layout, field, model, params);
+		
 		%var string class_name = field["class_name"] |> default string "";
 		%var string class_name_form = field["class_name_form"] |> default string "";
 		%var Dict class_settings = field["class_settings"] |> default Dict {};
-		%var var model_path = static::getBindPath(field);
+		%if (not rtl::isEmpty(class_name_form)){ %var class_name = class_name_form; }
+		%var Collection<string> model_path = static::getBindPath(field);
+		
+		<!-- Patch class settings -->
+		%var class_settings = static::patchSettings(layout, field, class_settings, model, params);
 		
 		<div class='form_row' @key={ field_name }>
 			<div class='form_label'>{ field["label"] }:</div>
 			<div class='form_value'>
-			
-				%if (not rtl::isEmpty(class_name_form)){ %var class_name = class_name_form; }
 				%if (not rtl::isEmpty(class_name))
 				{
 					<{class_name} @bind={ model_path } @event:ChangeEvent="onItemChange"
@@ -129,24 +137,24 @@
 					/>
 				}
 			</div>
-			<div class='form_error'>
-				{ static::renderFieldError(model, field_name) }
-			</div>
+			{ static::renderFieldError(model, field_name) }
 		</div>
 	}
 </template>
 
 
 <template name="renderFieldError" args="FormModel model, string field_name">
-	%var Collection<string> errors = model["fields_errors"][field_name];
-	%if (errors != null)
-	{
-		%for (int i=0; i<errors.count(); i++)
+	<div class='form_error'>
+		%var Collection<string> errors = model["fields_errors"][field_name];
+		%if (errors != null)
 		{
-			%var string s = errors[i];
-			<div class='form_error_line'>{ s }</div>
+			%for (int i=0; i<errors.count(); i++)
+			{
+				%var string s = errors[i];
+				<div class='form_error_line'>{ s }</div>
+			}
 		}
-	}
+	</div>
 </template>
 
 
@@ -181,6 +189,27 @@
 
 
 <script type="frontend">
+
+
+/**
+ * Patch field
+ */
+pure Dict patchField(LayoutModel layout, Dict field, var model, Dict params)
+{
+	return field;
+}
+
+
+
+/**
+ * Patch class settings
+ */
+pure Dict patchSettings(LayoutModel layout, Dict field, Dict class_settings, var model, Dict params)
+{
+	return class_settings;
+}
+
+
 
 /**
  * Returns result class
