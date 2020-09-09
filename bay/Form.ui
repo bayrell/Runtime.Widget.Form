@@ -24,6 +24,7 @@
 <use name="Runtime.Core.Message" />
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Button.Button" component="true" />
+<use name="Runtime.Web.CRUD.FieldInfo" />
 <use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Web.Form.FormEvent" />
@@ -110,7 +111,7 @@
 
 
 <template name="renderRow" args="LayoutModel layout, FormModel model, Dict params, string field_name">
-	%var Dict field = params["struct"][field_name];
+	%var FieldInfo field = FieldInfo::getFieldInfo(params["struct"], field_name);
 	%if (field != null)
 	{
 		<!-- Patch field settings -->
@@ -131,8 +132,8 @@
 				%if (not rtl::isEmpty(class_name))
 				{
 					<{class_name} @bind={ model_path } @event:ChangeEvent="onItemChange"
-						used-by="form" name={ field_name } form-item={ model["item"] }
-						model-path={ model_path }
+						used-by="form" name={ field_name } field-info={ field }
+						form-item={ model["item"] } model-path={ model_path }
 						...class_settings
 					/>
 				}
