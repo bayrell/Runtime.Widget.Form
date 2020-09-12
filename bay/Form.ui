@@ -160,18 +160,57 @@
 
 
 <template name="renderButtons">
-	<div class="form_buttons" @key="buttons">
-	%if (params['action'] == "add")
+	%var fn renderButtons = params["renderButtons"];
+	%if (rtl::exists(renderButtons) and rtl::isFn(renderButtons))
 	{
-		<Button @event:MouseClickEvent="onButtonClick" data-action="create">Add</Button>
-		<Button @event:MouseClickEvent="onButtonClick" data-action="cancel">Cancel</Button>
+		<div class="form_buttons" @key="buttons">
+			{ renderButtons(layout, model, params, content) }
+		</div>
 	}
-	%if (params['action'] == "edit")
+	%else
 	{
-		<Button @event:MouseClickEvent="onButtonClick" data-action="update">Update</Button>
-		<Button @event:MouseClickEvent="onButtonClick" data-action="cancel">Cancel</Button>
+		<div class="form_buttons" @key="buttons">
+		%if (params['action'] == "add")
+		{
+			<Button type="success" @event:MouseClickEvent="onButtonClick" data-action="create">Add</Button>
+			<Button @event:MouseClickEvent="onButtonClick" data-action="cancel">Cancel</Button>
+		}
+		%if (params['action'] == "edit")
+		{
+			<Button type="success" @event:MouseClickEvent="onButtonClick" data-action="update">Update</Button>
+			<Button @event:MouseClickEvent="onButtonClick" data-action="cancel">Cancel</Button>
+		}
+		</div>
 	}
-	</div>
+</template>
+
+
+<template name="renderButton" args="LayoutModel layout, var model, Dict params, string button_type">
+	%if (button_type == "create")
+	{
+		<Button type="success" @event:MouseClickEvent="onButtonClick" data-action="create" @key="create">
+			Add
+		</Button>
+	}
+	%if (button_type == "update")
+	{
+		<Button type="success" @event:MouseClickEvent="onButtonClick" data-action="update" @key="create">
+			Update
+		</Button>
+	}
+	%if (button_type == "cancel")
+	{
+		<Button @event:MouseClickEvent="onButtonClick" data-action="cancel" @key="cancel">
+			Cancel
+		</Button>
+	}
+</template>
+
+
+<template name="renderButtonInfo" args="LayoutModel layout, var model, Dict params, Dict button_info">
+	<Button @event:MouseClickEvent="onButtonClick" ...button_info>
+		{ button_info["value"] }
+	</Button>
 </template>
 
 
@@ -280,6 +319,11 @@ async void onButtonClick(Message<MouseClickEvent> msg)
 	else if (data_action == "cancel")
 	{
 		event <= event <= FormEvent::ACTION_CANCEL;
+		await this.signal(event);
+	}
+	else
+	{
+		event <= event <= data_action;
 		await this.signal(event);
 	}
 }
