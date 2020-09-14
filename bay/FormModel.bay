@@ -26,6 +26,7 @@ struct FormModel extends BaseStruct
 {
 	Collection fields_errors = null;
 	Dict item = null;
+	Dict old_item = null;
 	string message = "";
 	string success_message = "";
 	string error_message = "";
@@ -34,7 +35,7 @@ struct FormModel extends BaseStruct
 	/**
 	 * Set item
 	 */
-	pure FormModel setItem(FormModel model, Dict item) => model.copy{ "item": item };
+	pure FormModel setItem(FormModel model, Dict item) => model.copy{ "item": item, "old_item": item };
 	
 	
 	

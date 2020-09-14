@@ -111,7 +111,8 @@
 
 
 <template name="renderRow" args="LayoutModel layout, FormModel model, Dict params, string field_name">
-	%var FieldInfo field = FieldInfo::getFieldInfo(params["struct"], field_name);
+	%var Collection<FieldInfo> struct = params["struct"];
+	%var FieldInfo field = FieldInfo::getFieldInfo(struct, field_name);
 	%if (field != null)
 	{
 		<!-- Patch field settings -->
@@ -132,7 +133,7 @@
 				%if (not rtl::isEmpty(class_name))
 				{
 					<{class_name} @bind={ model_path } @event:ChangeEvent="onItemChange"
-						used-by="form" name={ field_name } field-info={ field }
+						used-by="form" name={ field_name } field-info={ field } struct={ struct }
 						form-item={ model["item"] } model-path={ model_path }
 						...class_settings
 					/>
