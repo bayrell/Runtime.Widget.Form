@@ -18,8 +18,9 @@
 
 <class name="Runtime.Widget.Form.Form">
 
-<use name="Runtime.Widget.RowButtons" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
+<use name="Runtime.Widget.RowButtons" component="true" />
+<use name="Runtime.Widget.WidgetError" />
 <use name="Runtime.Widget.Form.FormModel" />
 
 
@@ -27,12 +28,22 @@
 .widget_form__row{
 	margin-bottom: calc(var(--widget-space) * 3);
 }
-.widget_form__row:last-childs{
+.widget_form__row:last-child{
 	margin-bottom: 0;
 }
 .widget_form__row_label{
 	display: block;
 	margin-bottom: var(--widget-space);
+}
+.widget_form__result{
+	margin-top: calc(var(--widget-space) * 3);
+	text-align: center;
+}
+.widget_form__result--success{
+	color: var(--widget-color-success);
+}
+.widget_form__result--error{
+	color: var(--widget-color-danger);
 }
 .widget_form__field_result--hide{
 	display: none;
@@ -53,7 +64,9 @@
 	%set string field_component = field.get("component", null);
 	%set string field_model = field.get("model", null);
 	<div class="widget_form__field" @key={{ field_name }}>
-		<{field_component} name={{ field_name }} @model={{ field_model }} />
+		<{field_component} name={{ field_name }} value={{ this.model.storage.item.get(field_name) }}
+			@event:onChange={{ this.onChangeField(field_name) }}
+		/>
 	</div>
 </template>
 
@@ -99,11 +112,19 @@
 </template>
 
 
+<template name="renderResult">
+	<div class="widget_form__result" class={{ this.getErrorClass() }} >
+		{{ this.model.getErrorMessage() }}
+	</div>
+</template>
+
+
 <template name="renderForm">
 	<form method="POST"
 		enctype="multipart/form-data" onsubmit="return false;"
 	>
 		%render this.renderContent();
+		%render this.renderResult();
 	</form>
 </template>
 
@@ -122,6 +143,31 @@
  * Returns styles
  */
 string getStyles() => this.model.styles.join(" ");
+
+
+/**
+ * Returns error class
+ */
+string getErrorClass()
+{
+	WidgetError error = this.model.storage.error;
+	if (error.message == "") return "widget_form__result--hide";
+	if (error.isSuccess()) return "widget_form__result--success";
+	if (error.isError()) return "widget_form__result--error";
+	return "";
+}
+
+
+/**
+ * Change field
+ */
+void onChangeField(string field_name)
+{
+	return void (var e) use (field_name)
+	{
+		this.model.onChangeField(field_name, e.target.value);
+	};
+}
 
 </script>
 

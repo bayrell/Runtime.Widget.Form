@@ -75,6 +75,37 @@ class FormModel extends BaseWidget
 	
 	
 	/**
+	 * Clear form
+	 */
+	void clear()
+	{
+		this.storage.clear();
+		for (int i=0; i<this.fields.count(); i++)
+		{
+			Dict field = this.fields.get(i);
+			string field_name = field.get("name");
+			var default_value = field.get("default", "");
+			this.storage.item.set(field_name, default_value);
+		}
+	}
+	
+	
+	/**
+	 * Change field
+	 */
+	void onChangeField(string field_name, var value)
+	{
+		this.storage.item.set(field_name, value);
+	}
+	
+	
+	/**
+	 * Returns error message
+	 */
+	string getErrorMessage() => this.storage.error.message;
+	
+	
+	/**
 	 * Import data
 	 */
 	void importData(Map import_data)
@@ -102,6 +133,16 @@ class FormModel extends BaseWidget
 	{
 		await parent();
 		/* await this.storage.doSearch(); */
+	}
+	
+	
+	/**
+	 * Save form
+	 */
+	async void save()
+	{
+		this.storage.error.setWaitMessage();
+		await this.storage.doSave();
 	}
 	
 }
