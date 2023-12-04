@@ -1,10 +1,22 @@
 {
-	"name": "Runtime.Web.Form",
+	"name": "Runtime.Widget.Form",
 	"assets":
 	[
-		"Form",
-		"FormEvent",
-		"FormModel",
-		"ModuleDescription"
+		"AppHook.bay",
+		"Form.bay",
+		"FormModel.bay",
+		"ModuleDescription.bay"
+	],
+	"src": "./bay",
+	"dest":
+	{
+		"php": "./php",
+		"es6": "./es6"
+	},
+	"allow":
+	[
+		"\\.bay$",
+		"\\.php$",
+		"\\.js$"
 	]
 }

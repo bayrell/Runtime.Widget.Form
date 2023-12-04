@@ -16,35 +16,42 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Web.Form;
+namespace Runtime.Widget.Form;
+
+use Runtime.Entity.Hook;
 
 
 class ModuleDescription
 {
+	/**
+	 * Returns module name
+	 * @return string
+	 */
+	pure string getModuleName() => "Runtime.Widget.Form";
+	
 	
 	/**
 	 * Returns module name
 	 * @return string
 	 */
-	pure string getModuleName() => "Runtime.Web.Form";
-	
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	pure string getModuleVersion() => "0.0.1";
-	
+	pure string getModuleVersion() => "0.12";
 	
 	
 	/**
 	 * Returns required modules
 	 * @return Map<string>
 	 */
-	pure Map<string> requiredModules() => 
+	pure Dict<string> requiredModules() =>
 	{
 		"Runtime.Web": "*",
 	};
 	
+	
+	/**
+	 * Returns enities
+	 */
+	pure Collection<Dict> entities() => 
+	[
+		new Hook("Runtime.Widget.Form.AppHook"),
+	];
 }

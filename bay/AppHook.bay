@@ -1,7 +1,7 @@
 /*!
  *  Bayrell Runtime Library
  *
- *  (c) Copyright 2016-2020 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,29 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Web.Form;
+namespace Runtime.Widget.Form;
 
-use Runtime.BaseStruct;
+use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.Widget.Form.Form;
 
 
-struct FormEvent extends BaseStruct
+class AppHook extends BaseAppHook
 {
-	static const string ACTION_CREATE = "create";
-	static const string ACTION_UPDATE = "update";
-	static const string ACTION_CANCEL = "cancel";
-	static const string ACTION_CHANGE = "change";
-	static const string ACTION_SEARCH = "search";
-	string event = "";
-	Dict item = null;
-	string field_name = "";
-	var value = null;
-	var old_value = null;
+	/**
+	 * Register hooks
+	 */
+	void register_hooks()
+	{
+		this.register(static::COMPONENTS);
+	}
+	
+	
+	/**
+	 * Components
+	 */
+	void components(Map params)
+	{
+		Vector components = params.get("components");
+		components.append(classof Form);
+	}
 }

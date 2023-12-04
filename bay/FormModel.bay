@@ -1,7 +1,7 @@
 /*!
  *  Bayrell Runtime Library
  *
- *  (c) Copyright 2016-2020 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,107 +16,92 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Web.Form;
+namespace Runtime.Widget.Form;
 
-use Runtime.BaseStruct;
-use Runtime.Core.RemoteCallAnswer;
+use Runtime.Web.BaseWidget;
+use Runtime.Widget.RowButtonsModel;
+use Runtime.Widget.Styles;
+use Runtime.Widget.Crud.CrudApiStorage;
+use Runtime.Widget.Form.Form;
 
 
-struct FormModel extends BaseStruct
+class FormModel extends BaseWidget
 {
-	Collection fields_errors = null;
-	Dict item = null;
-	Dict old_item = null;
-	string message = "";
-	string success_message = "";
-	string error_message = "";
-	Dict params = {};
-	
-	
-	/**
-	 * Set item
-	 */
-	pure FormModel setItem(FormModel model, Dict item) => model.copy{ "item": item, "old_item": item };
-	
-	
-	
-	/**
-	 * Set wait message
-	 */
-	pure FormModel setWaitMessage(FormModel model, string message = "") => model.copy
-	{
-		"message": (message != message) ? message : _("Runtime.Web", "Please wait"),
-		"success_message": message,
-		"error_message": "",
+	CrudApiStorage storage = null;
+	string component = classof Form;
+	string widget_name = "form";
+	Vector<Map> fields = [];
+	RowButtonsModel top_buttons = new RowButtonsModel{
+		"styles": ["@widget_form__top_buttons"]
 	};
-	
-	
-	
-	/**
-	 * Message
-	 */
-	pure FormModel setMessage(FormModel model, string message) => model.copy
-	{
-		"message": "",
-		"success_message": message,
-		"error_message": "",
-	};
-	
+	Styles styles = new Styles{ "prefix": "widget_form" };
 	
 	
 	/**
-	 * Set answer
+	 * Constructor
 	 */
-	pure FormModel setAnswer(FormModel model, RemoteCallAnswer answer)
+	void constructor(Dict params = null)
 	{
-		model <= fields_errors <= null;
-		if (answer.isSuccess()) return static::setSuccess(model, answer.success_message);
-		model = static::setError(model, answer.error_message);
-		
-		/* Set field errors */
-		if (answer.code == rtl::ERROR_VALIDATION)
+		parent(params);
+		if (params)
 		{
-			model <= fields_errors <= answer.response["fields_errors"];
+			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 		}
-		
-		return model
 	}
 	
 	
-	
 	/**
-	 * Success
+	 * Set data provider
 	 */
-	pure FormModel setSuccess(FormModel model, string message) => model.copy
+	void setDataStorage(CrudApiStorage storage)
 	{
-		"message": "",
-		"success_message": message,
-		"error_message": "",
-	};
-	
+		this.storage = storage;
+	}
 	
 	
 	/**
-	 * Error
+	 * Add field
 	 */
-	pure FormModel setError(FormModel model, string message) => model.copy
+	void addField(Map field)
 	{
-		"message": "",
-		"success_message": "",
-		"error_message": message,
-	};
-	
+		this.fields.append(field);
+	}
 	
 	
 	/**
-	 * Clear
+	 * Returns field result
 	 */
-	pure FormModel clear(FormModel model) => new FormModel
+	Collection getFieldResult(string field_name) => [];
+	
+	
+	/**
+	 * Import data
+	 */
+	void importData(Map import_data)
 	{
-		"item": new Dict(),
-		"fields_errors": null,
-		"message": "",
-		"success_message": "",
-		"error_message": "",
-	};
+		parent(import_data);
+		this.storage.importData(import_data.get("storage"));
+	}
+	
+	
+	/**
+	 * Export data
+	 */
+	Map exportData()
+	{
+		Map data = parent();
+		data.set("storage", this.storage.exportData());
+		return data;
+	}
+	
+	
+	/**
+	 * Load table data
+	 */
+	async void loadData()
+	{
+		await parent();
+		/* await this.storage.doSearch(); */
+	}
+	
 }
