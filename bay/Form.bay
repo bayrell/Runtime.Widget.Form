@@ -28,15 +28,11 @@
 .widget_form__row{
 	margin-bottom: calc(var(--widget-space) * 3);
 }
-.widget_form__row:last-child{
-	margin-bottom: 0;
-}
 .widget_form__row_label{
 	display: block;
 	margin-bottom: var(--widget-space);
 }
 .widget_form__result{
-	margin-top: calc(var(--widget-space) * 3);
 	text-align: center;
 }
 .widget_form__result--success{
@@ -45,7 +41,11 @@
 .widget_form__result--error{
 	color: var(--widget-color-danger);
 }
-.widget_form__field_result--hide{
+.widget_form__field_error{
+	color: var(--widget-color-danger);
+	margin-top: var(--widget-space);
+}
+.widget_form__field_error--hide{
 	display: none;
 }
 </style>
@@ -81,18 +81,18 @@
 		
 		%render this.renderField(field);
 		
-		%set Collection<string> field_result = this.model.getFieldResult(field_name);
-		%if (field_result.count() == 0)
+		%set Collection<string> field_error = this.model.getFieldResult(field_name);
+		%if (field_error.count() == 0)
 		{
-			<div class="widget_form__field_result widget_form__field_result--hide"
+			<div class="widget_form__field_error widget_form__field_error--hide"
 				data-name={{ field_name }} @key="result1"></div>
 		}
 		%else
 		{
-			<div class="widget_form__field_result" data-name={{ field_name }} @key="result2">
-				%for (int i=0; i<field_result.count(); i++)
+			<div class="widget_form__field_error" data-name={{ field_name }} @key="result2">
+				%for (int i=0; i<field_error.count(); i++)
 				{
-					<div>{{ field_result.get(i) }}</div>
+					<div>{{ field_error.get(i) }}</div>
 				}
 			</div>
 		}

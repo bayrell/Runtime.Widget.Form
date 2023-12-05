@@ -18,6 +18,7 @@
 
 namespace Runtime.Widget.Form;
 
+use Runtime.Web.ApiResult;
 use Runtime.Web.BaseWidget;
 use Runtime.Widget.RowButtonsModel;
 use Runtime.Widget.Styles;
@@ -31,6 +32,7 @@ class FormModel extends BaseWidget
 	string component = classof Form;
 	string widget_name = "form";
 	Vector<Map> fields = [];
+	Map<Vector> fields_error = {};
 	RowButtonsModel top_buttons = new RowButtonsModel{
 		"styles": ["@widget_form__top_buttons"]
 	};
@@ -71,7 +73,11 @@ class FormModel extends BaseWidget
 	/**
 	 * Returns field result
 	 */
-	Collection getFieldResult(string field_name) => [];
+	Collection getFieldResult(string field_name)
+	{
+		if (this.fields_error.has(field_name)) return this.fields_error.get(field_name);
+		return [];
+	}
 	
 	
 	/**
@@ -127,6 +133,18 @@ class FormModel extends BaseWidget
 	
 	
 	/**
+	 * Set api result
+	 */
+	void setApiResult(ApiResult res)
+	{
+		if (res.data.has("fields"))
+		{
+			this.fields_error = res.data.get("fields");
+		}
+	}
+	
+	
+	/**
 	 * Load table data
 	 */
 	async void loadData()
@@ -142,7 +160,8 @@ class FormModel extends BaseWidget
 	async void save()
 	{
 		this.storage.error.setWaitMessage();
-		await this.storage.doSave();
+		ApiResult res = await this.storage.doSave();
+		this.setApiResult(res);
 	}
 	
 }
