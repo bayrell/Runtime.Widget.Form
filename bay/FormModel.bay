@@ -28,6 +28,7 @@ use Runtime.Widget.Form.Form;
 
 class FormModel extends BaseWidget
 {
+	string action = "";
 	CrudApiStorage storage = null;
 	string component = classof Form;
 	string widget_name = "form";
@@ -53,11 +54,36 @@ class FormModel extends BaseWidget
 	
 	
 	/**
+	 * Set action
+	 */
+	void setAction(string action)
+	{
+		this.action = action;
+	}
+	
+	
+	/**
 	 * Set data provider
 	 */
 	void setDataStorage(CrudApiStorage storage)
 	{
 		this.storage = storage;
+	}
+	
+	
+	/**
+	 * Primary keys
+	 */
+	Vector getPrimaryKeys() => [];
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Map getPrimaryKey()
+	{
+		Vector keys = this.getPrimaryKeys();
+		return this.storage.item.intersect(keys);
 	}
 	
 	
@@ -86,6 +112,7 @@ class FormModel extends BaseWidget
 	void clear()
 	{
 		this.storage.clear();
+		this.fields_error = {};
 		for (int i=0; i<this.fields.count(); i++)
 		{
 			Dict field = this.fields.get(i);
