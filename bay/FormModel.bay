@@ -162,11 +162,14 @@ class FormModel extends BaseWidget
 	/**
 	 * Set api result
 	 */
-	void setApiResult(ApiResult res)
+	void setApiResult(ApiResult res, string action = "")
 	{
-		if (res.data.has("fields"))
+		if (action == "save")
 		{
-			this.fields_error = res.data.get("fields");
+			if (res.data.has("fields"))
+			{
+				this.fields_error = res.data.get("fields");
+			}
 		}
 	}
 	
@@ -188,7 +191,18 @@ class FormModel extends BaseWidget
 	{
 		this.storage.error.setWaitMessage();
 		ApiResult res = await this.storage.doSave();
-		this.setApiResult(res);
+		this.setApiResult(res, "save");
+	}
+	
+	
+	/**
+	 * Delete form
+	 */
+	async void delete()
+	{
+		this.storage.error.setWaitMessage();
+		ApiResult res = await this.storage.doDelete();
+		this.setApiResult(res, "delete");
 	}
 	
 }
