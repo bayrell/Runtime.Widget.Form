@@ -133,6 +133,12 @@ class FormModel extends BaseWidget
 	
 	
 	/**
+	 * Returns item value
+	 */
+	var getItemValue(Map item, string field_name) => item.get(field_name);
+	
+	
+	/**
 	 * Add field
 	 */
 	void addField(Map field)
