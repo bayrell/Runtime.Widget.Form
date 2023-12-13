@@ -65,7 +65,7 @@
 	%set string field_model = field.get("model", null);
 	%set string props = field.get("props", {});
 	<div class="widget_form__field" @key={{ field_name }}>
-		<{field_component} name={{ field_name }}
+		<{field_component} name={{ field_name }} @model={{ field_model }}
 			value={{ this.model.getItemValue(this.model.storage.item, field_name) }}
 			@event:onChange={{ this.onChangeField(field_name) }}
 			data={{{
