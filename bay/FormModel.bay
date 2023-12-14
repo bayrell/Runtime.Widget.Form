@@ -38,6 +38,9 @@ class FormModel extends BaseWidget
 	RowButtonsModel top_buttons = new RowButtonsModel{
 		"styles": ["@widget_form__top_buttons"]
 	};
+	RowButtonsModel bottom_buttons = new RowButtonsModel{
+		"styles": ["@widget_form__bottom_buttons"]
+	};
 	Styles styles = new Styles{ "prefix": "widget_form" };
 	
 	
@@ -49,9 +52,9 @@ class FormModel extends BaseWidget
 		parent(params);
 		if (params)
 		{
+			if (params.has("action")) this.action = params.get("action");
 			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 		}
-		
 		this.setDataStorage( this.createDataStorage() );
 		this.initWidgets();
 		this.initFields();
@@ -195,6 +198,7 @@ class FormModel extends BaseWidget
 	void importData(Map import_data)
 	{
 		parent(import_data);
+		this.action = import_data.get("action");
 		if (this.storage)
 		{
 			this.storage.importData(import_data.get("storage"));
@@ -210,6 +214,7 @@ class FormModel extends BaseWidget
 		Map data = parent();
 		if (this.storage)
 		{
+			data.set("action", this.action);
 			data.set("storage", this.storage.exportData());
 		}
 		return data;
@@ -237,7 +242,10 @@ class FormModel extends BaseWidget
 	async void loadData()
 	{
 		await parent();
-		/* await this.storage.doSearch(); */
+		if (this.storage.item_pk)
+		{
+			await this.storage.doItem();
+		}
 	}
 	
 	
@@ -261,5 +269,4 @@ class FormModel extends BaseWidget
 		ApiResult res = await this.storage.doDelete();
 		this.setApiResult(res, "delete");
 	}
-	
 }

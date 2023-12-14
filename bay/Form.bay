@@ -34,6 +34,7 @@
 }
 .widget_form__result{
 	text-align: center;
+	margin-top: var(--widget-space);
 }
 .widget_form__result--success{
 	color: var(--widget-color-success);
@@ -48,6 +49,13 @@
 .widget_form__field_error--hide{
 	display: none;
 }
+.widget_form %(RowButtons)widget_form__top_buttons{
+	margin-bottom: var(--widget-space);
+}
+.widget_form %(RowButtons)widget_form__bottom_buttons{
+	margin-top: var(--widget-space);
+	justify-content: center;
+}
 </style>
 
 
@@ -55,6 +63,14 @@
 	%if (this.model.top_buttons.count() > 0)
 	{
 		<RowButtons @model={{ this.model.top_buttons }} />
+	}
+</template>
+
+
+<template name="renderBottomButtons">
+	%if (this.model.bottom_buttons.count() > 0)
+	{
+		<RowButtons @model={{ this.model.bottom_buttons }} />
 	}
 </template>
 
@@ -130,6 +146,7 @@
 		enctype="multipart/form-data" onsubmit="return false;"
 	>
 		%render this.renderContent();
+		%render this.renderBottomButtons();
 		%render this.renderResult();
 	</form>
 </template>
