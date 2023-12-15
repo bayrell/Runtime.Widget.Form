@@ -30,6 +30,7 @@
 }
 .widget_form__row_label{
 	display: block;
+	font-weight: bold;
 	margin-bottom: var(--widget-space);
 }
 .widget_form__result{
@@ -50,7 +51,7 @@
 	display: none;
 }
 .widget_form %(RowButtons)widget_form__top_buttons{
-	margin-bottom: var(--widget-space);
+	margin-bottom: calc(var(--widget-space) * 3);
 }
 .widget_form %(RowButtons)widget_form__bottom_buttons{
 	margin-top: var(--widget-space);
