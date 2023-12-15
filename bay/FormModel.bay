@@ -151,6 +151,17 @@ class FormModel extends BaseWidget
 	
 	
 	/**
+	 * Remove field
+	 */
+	void removeField(string field_name)
+	{
+		this.fields = this.fields.filter(
+			bool (Map field) use (field_name) => field.get("name") != field_name
+		);
+	}
+	
+	
+	/**
 	 * Returns field result
 	 */
 	Collection getFieldResult(string field_name)
