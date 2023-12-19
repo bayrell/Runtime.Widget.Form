@@ -19,6 +19,7 @@
 namespace Runtime.Widget.Form;
 
 use Runtime.BaseObject;
+use Runtime.Serializer;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseWidget;
 use Runtime.Widget.RowButtonsModel;
@@ -204,31 +205,13 @@ class FormModel extends BaseWidget
 	
 	
 	/**
-	 * Import data
+	 * Process frontend data
 	 */
-	void importData(Map import_data)
+	void processFrontendData(Serializer serializer, Map data)
 	{
-		parent(import_data);
-		this.action = import_data.get("action");
-		if (this.storage)
-		{
-			this.storage.importData(import_data.get("storage"));
-		}
-	}
-	
-	
-	/**
-	 * Export data
-	 */
-	Map exportData()
-	{
-		Map data = parent();
-		if (this.storage)
-		{
-			data.set("action", this.action);
-			data.set("storage", this.storage.exportData());
-		}
-		return data;
+		serializer.process(this, "action", data);
+		serializer.process(this, "storage", data);
+		parent(serializer, data);
 	}
 	
 	
