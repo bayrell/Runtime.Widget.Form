@@ -20,7 +20,7 @@
 
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.RowButtons" component="true" />
-<use name="Runtime.Widget.WidgetError" />
+<use name="Runtime.Widget.WidgetResult" component="true" />
 <use name="Runtime.Widget.Form.FormModel" />
 
 
@@ -33,22 +33,9 @@
 	font-weight: bold;
 	margin-bottom: var(--widget-space);
 }
-.widget_form__result{
-	text-align: center;
-	margin-top: var(--widget-space);
-}
-.widget_form__result--success{
-	color: var(--widget-color-success);
-}
-.widget_form__result--error{
-	color: var(--widget-color-danger);
-}
 .widget_form__field_error{
 	color: var(--widget-color-danger);
 	margin-top: var(--widget-space);
-}
-.widget_form__field_error--hide{
-	display: none;
 }
 .widget_form %(RowButtons)widget_form__top_buttons{
 	margin-bottom: calc(var(--widget-space) * 3);
@@ -136,9 +123,7 @@
 
 
 <template name="renderResult">
-	<div class="widget_form__result" class={{ this.getErrorClass() }} >
-		{{ this.model.getErrorMessage() }}
-	</div>
+	<WidgetResult @model={{ this.model.storage.result }} />
 </template>
 
 
@@ -167,19 +152,6 @@
  * Returns styles
  */
 string getStyles() => this.model.styles.join(" ");
-
-
-/**
- * Returns error class
- */
-string getErrorClass()
-{
-	WidgetError error = this.model.storage.error;
-	if (error.message == "") return "widget_form__result--hide";
-	if (error.isSuccess()) return "widget_form__result--success";
-	if (error.isError()) return "widget_form__result--error";
-	return "";
-}
 
 
 /**

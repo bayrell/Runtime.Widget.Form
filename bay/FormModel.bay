@@ -21,14 +21,14 @@ namespace Runtime.Widget.Form;
 use Runtime.BaseObject;
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
-use Runtime.Web.BaseWidget;
+use Runtime.Web.BaseModel;
 use Runtime.Widget.RowButtonsModel;
 use Runtime.Widget.Styles;
 use Runtime.Widget.Crud.CrudApiStorage;
 use Runtime.Widget.Form.Form;
 
 
-class FormModel extends BaseWidget
+class FormModel extends BaseModel
 {
 	string action = "";
 	CrudApiStorage storage = null;
@@ -248,7 +248,7 @@ class FormModel extends BaseWidget
 	 */
 	async void save()
 	{
-		this.storage.error.setWaitMessage();
+		this.storage.result.setWaitMessage();
 		ApiResult res = await this.storage.doSave();
 		this.setApiResult(res, "save");
 	}
@@ -259,7 +259,7 @@ class FormModel extends BaseWidget
 	 */
 	async void delete()
 	{
-		this.storage.error.setWaitMessage();
+		this.storage.result.setWaitMessage();
 		ApiResult res = await this.storage.doDelete();
 		this.setApiResult(res, "delete");
 	}
