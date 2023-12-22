@@ -235,11 +235,11 @@ class FormModel extends BaseModel
 	 */
 	async void loadData()
 	{
-		await parent();
 		if (this.storage.item_pk)
 		{
 			await this.storage.doItem();
 		}
+		await parent();
 	}
 	
 	
