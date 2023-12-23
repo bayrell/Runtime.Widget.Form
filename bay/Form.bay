@@ -19,6 +19,7 @@
 <class name="Runtime.Widget.Form.Form">
 
 <use name="Runtime.Widget.Input" component="true" />
+<use name="Runtime.Widget.RenderListModel" />
 <use name="Runtime.Widget.RowButtons" component="true" />
 <use name="Runtime.Widget.WidgetResult" component="true" />
 <use name="Runtime.Widget.Form.FormModel" />
@@ -138,10 +139,21 @@
 </template>
 
 
+<template name="renderWidgets">
+	%set RenderListModel render_list = this.model.getWidget("render_list");
+	%if (render_list)
+	{
+		%set string component = render_list.component;
+		<{component} @model={{ render_list }} />
+	}
+</template>
+
+
 <template>
 	<div class="widget_form" class={{ this.getStyles() }}>
 		%render this.renderTopButtons();
 		%render this.renderForm();
+		%render this.renderWidgets();
 	</div>
 </template>
 

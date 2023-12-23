@@ -22,6 +22,7 @@ use Runtime.BaseObject;
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseModel;
+use Runtime.Widget.RenderListModel;
 use Runtime.Widget.RowButtonsModel;
 use Runtime.Widget.Styles;
 use Runtime.Widget.Crud.CrudApiStorage;
@@ -75,6 +76,9 @@ class FormModel extends BaseModel
 	 */
 	void initWidgets()
 	{
+		RenderListModel render_list = new RenderListModel{
+			"parent_widget": this,
+		};
 	}
 	
 	
