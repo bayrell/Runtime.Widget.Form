@@ -72,7 +72,7 @@
 	%set var value = "";
 	%if (this.model.storage)
 	{
-		%set value = this.model.getItemValue(this.model.storage.getItem(), field_name);
+		%set value = this.model.storage.getItemValue(field_name);
 	}
 	<div class="widget_form__field" @key={{ field_name }}>
 		<{field_component} name={{ field_name }} @model={{ field_model }}

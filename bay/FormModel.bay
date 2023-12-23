@@ -37,7 +37,6 @@ class FormModel extends BaseModel
 	string widget_name = "form";
 	Vector<Map> fields = [];
 	Map<Vector> fields_error = {};
-	Vector<string> primary_keys = [];
 	RowButtonsModel top_buttons = new RowButtonsModel{
 		"styles": ["@widget_form__top_buttons"]
 	};
@@ -59,7 +58,10 @@ class FormModel extends BaseModel
 			if (params.has("storage")) this.storage = params.get("storage");
 			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 		}
-		this.setDataStorage( this.createDataStorage() );
+		if (this.storage == null)
+		{
+			this.setDataStorage( this.createDataStorage() );
+		}
 		this.initWidgets();
 		this.initFields();
 		this.initButtons();
@@ -122,42 +124,8 @@ class FormModel extends BaseModel
 	 */
 	void setDataStorage(CrudApiStorage storage)
 	{
-		if (storage != null)
-		{
-			this.storage = storage;
-		}
+		this.storage = storage;
 	}
-	
-	
-	/**
-	 * Primary keys
-	 */
-	Vector<string> getPrimaryKeys() => this.primary_keys;
-	
-	
-	/**
-	 * Set primary keys
-	 */
-	Vector setPrimaryKeys(Vector<string> keys)
-	{
-		this.primary_keys = keys;
-	}
-	
-	
-	/**
-	 * Returns primary key
-	 */
-	Map getPrimaryKey()
-	{
-		Vector keys = this.getPrimaryKeys();
-		return this.storage.getItem().intersect(keys);
-	}
-	
-	
-	/**
-	 * Returns item value
-	 */
-	var getItemValue(Map item, string field_name) => item.get(field_name);
 	
 	
 	/**
