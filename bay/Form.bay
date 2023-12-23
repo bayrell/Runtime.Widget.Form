@@ -66,12 +66,17 @@
 
 <template name="renderField" args="Dict field">
 	%set string field_name = field.get("name");
-	%set string field_component = field.get("component", null);
+	%set string field_component = field.get("component", "Runtime.Widget.Input");
 	%set string field_model = field.get("model", null);
 	%set string props = field.get("props", {});
+	%set var value = "";
+	%if (this.model.storage)
+	{
+		%set value = this.model.getItemValue(this.model.storage.getItem(), field_name);
+	}
 	<div class="widget_form__field" @key={{ field_name }}>
 		<{field_component} name={{ field_name }} @model={{ field_model }}
-			value={{ this.model.getItemValue(this.model.storage.item, field_name) }}
+			value={{ value }}
 			@event:onChange={{ this.onChangeField(field_name) }}
 			data={{{
 				"field_name": field_name,
@@ -124,7 +129,10 @@
 
 
 <template name="renderResult">
-	<WidgetResult @model={{ this.model.storage.result }} />
+	%if (this.model.storage)
+	{
+		<WidgetResult @model={{ this.model.storage.result }} />
+	}
 </template>
 
 

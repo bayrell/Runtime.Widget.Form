@@ -37,6 +37,7 @@ class FormModel extends BaseModel
 	string widget_name = "form";
 	Vector<Map> fields = [];
 	Map<Vector> fields_error = {};
+	Vector<string> primary_keys = [];
 	RowButtonsModel top_buttons = new RowButtonsModel{
 		"styles": ["@widget_form__top_buttons"]
 	};
@@ -55,12 +56,13 @@ class FormModel extends BaseModel
 		if (params)
 		{
 			if (params.has("action")) this.action = params.get("action");
+			if (params.has("storage")) this.storage = params.get("storage");
 			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 		}
 		this.setDataStorage( this.createDataStorage() );
 		this.initWidgets();
 		this.initFields();
-		this.initTopButtons();
+		this.initButtons();
 		this.initStyles();
 	}
 	
@@ -91,9 +93,9 @@ class FormModel extends BaseModel
 	
 	
 	/**
-	 * Init top buttons
+	 * Init buttons
 	 */
-	void initTopButtons()
+	void initButtons()
 	{
 	}
 	
@@ -120,14 +122,26 @@ class FormModel extends BaseModel
 	 */
 	void setDataStorage(CrudApiStorage storage)
 	{
-		this.storage = storage;
+		if (storage != null)
+		{
+			this.storage = storage;
+		}
 	}
 	
 	
 	/**
 	 * Primary keys
 	 */
-	Vector getPrimaryKeys() => [];
+	Vector<string> getPrimaryKeys() => this.primary_keys;
+	
+	
+	/**
+	 * Set primary keys
+	 */
+	Vector setPrimaryKeys(Vector<string> keys)
+	{
+		this.primary_keys = keys;
+	}
 	
 	
 	/**
@@ -136,7 +150,7 @@ class FormModel extends BaseModel
 	Map getPrimaryKey()
 	{
 		Vector keys = this.getPrimaryKeys();
-		return this.storage.item.intersect(keys);
+		return this.storage.getItem().intersect(keys);
 	}
 	
 	
@@ -224,6 +238,7 @@ class FormModel extends BaseModel
 	 */
 	void setApiResult(ApiResult res, string action = "")
 	{
+		if (res == null) return;
 		if (action == "save")
 		{
 			if (res.data.has("fields"))
@@ -266,5 +281,26 @@ class FormModel extends BaseModel
 		this.storage.result.setWaitMessage();
 		ApiResult res = await this.storage.doDelete();
 		this.setApiResult(res, "delete");
+	}
+	
+	
+	/**
+	 * Get page title
+	 */
+	string getPageTitle(string action = "")
+	{
+		if (action == "add")
+		{
+			return "Add item";
+		}
+		if (action == "edit")
+		{
+			return "Edit item";
+		}
+		if (action == "delete")
+		{
+			return "Delete item";
+		}
+		return "";
 	}
 }
