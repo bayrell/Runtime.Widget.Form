@@ -27,6 +27,7 @@ use Runtime.Widget.Form.SaveButton;
 
 class SaveButtonModel extends ButtonModel
 {
+	string widget_name = "save_button";
 	string component = classof SaveButton;
 	FormModel form = null;
 	
