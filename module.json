@@ -2,9 +2,10 @@
 	"name": "Runtime.Widget.Form",
 	"assets":
 	[
-		"AppHook.bay",
 		"Form.bay",
 		"FormModel.bay",
+		"SaveButton.bay",
+		"SaveButtonModel.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./bay",

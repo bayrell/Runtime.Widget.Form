@@ -18,27 +18,41 @@
 
 namespace Runtime.Widget.Form;
 
-use Runtime.Web.Hooks.AppHook as BaseAppHook;
-use Runtime.Widget.Form.Form;
+use Runtime.Web.ApiResult;
+use Runtime.Widget.Button;
+use Runtime.Widget.ButtonModel;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Form.SaveButton;
 
 
-class AppHook extends BaseAppHook
+class SaveButtonModel extends ButtonModel
 {
+	string component = classof SaveButton;
+	FormModel form = null;
+	
+	
 	/**
-	 * Register hooks
+	 * Constructor
 	 */
-	void register_hooks()
+	void constructor(Map params = null)
 	{
-		this.register(static::COMPONENTS);
+		parent(params);
+		
+		if (params)
+		{
+			if (params.has("parent_widget")) this.form = params.get("parent_widget");
+			if (params.has("form")) this.form = params.get("form");
+		}
+		
+		this.styles.add("success");
 	}
 	
 	
 	/**
-	 * Components
+	 * Save
 	 */
-	void components(Map params)
+	async void save()
 	{
-		Vector components = params.get("components");
-		components.append(classof Form);
+		await this.form.save();
 	}
 }

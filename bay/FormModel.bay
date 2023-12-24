@@ -44,6 +44,7 @@ class FormModel extends BaseModel
 		"styles": ["@widget_form__bottom_buttons"]
 	};
 	Styles styles = new Styles{ "prefix": "widget_form" };
+	bool show_result = true;
 	
 	
 	/**

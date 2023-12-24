@@ -129,7 +129,7 @@
 
 
 <template name="renderResult">
-	%if (this.model.storage)
+	%if (this.model.storage and this.model.show_result)
 	{
 		<WidgetResult @model={{ this.model.storage.result }} />
 	}
