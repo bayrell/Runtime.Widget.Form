@@ -75,9 +75,11 @@
 		%set value = this.model.storage.getItemValue(field_name);
 	}
 	<div class="widget_form__field" @key={{ field_name }}>
-		<{field_component} name={{ field_name }} @model={{ field_model }}
+		<{field_component}
 			value={{ value }}
-			@event:onChange={{ this.onChangeField(field_name) }}
+			name={{ field_name }}
+			@model={{ field_model }}
+			@event:onValueChanged={{ this.onValueChanged(field_name) }}
 			data={{{
 				"field_name": field_name,
 			}}}
@@ -175,13 +177,13 @@ string getStyles() => this.model.styles.join(" ");
 
 
 /**
- * Change field
+ * Change value
  */
-void onChangeField(string field_name)
+void onValueChanged(string field_name)
 {
-	return void (var e) use (field_name)
+	return void (string value) use (field_name)
 	{
-		this.model.onChangeField(field_name, e.target.value);
+		this.model.onChangeField(field_name, value);
 	};
 }
 
