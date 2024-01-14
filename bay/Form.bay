@@ -79,7 +79,9 @@
 			value={{ value }}
 			name={{ field_name }}
 			@model={{ field_model }}
-			@event:onValueChanged={{ this.onValueChanged(field_name) }}
+			@event:onValueChanged={{
+				void (string value) use (field_name) => this.onValueChanged(field_name, value)
+			}}
 			data={{{
 				"field_name": field_name,
 			}}}
@@ -179,12 +181,9 @@ string getStyles() => this.model.styles.join(" ");
 /**
  * Change value
  */
-void onValueChanged(string field_name)
+void onValueChanged(string field_name, string value)
 {
-	return void (string value) use (field_name)
-	{
-		this.model.onChangeField(field_name, value);
-	};
+	this.model.onChangeField(field_name, value);
 }
 
 </script>
