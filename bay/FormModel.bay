@@ -177,9 +177,9 @@ class FormModel extends BaseModel
 	
 	
 	/**
-	 * Change field
+	 * Field changed event
 	 */
-	void onChangeField(string field_name, var value)
+	void onFieldChange(string field_name, var value)
 	{
 		this.storage.item.set(field_name, value);
 	}
